@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 class WeatherController extends Controller
 {
-    public function getWeather()
-    {
-        // Replace 'YOUR_API_KEY' with your OpenWeather API key
-        $apiKey = env('WEATHER_API_KEY');
-        
-        // Create a new Guzzle client instance
-        $client = new Client();
+  public function getWeather()
+  {
+    // Replace 'YOUR_API_KEY' with your OpenWeather API key
+    $apiKey = env('WEATHER_API_KEY');
 
-        // API endpoint URL with your desired location and units (e.g., London, Metric units)
-        $apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=Kuressaare&units=metric&appid={$apiKey}";
+    // Create a new Guzzle client instance
+    $client = new Client();
 
-        try {
-            // Make a GET request to the OpenWeather API
-            $response = $client->get($apiUrl);
+    // API endpoint URL with your desired location and units (e.g., London, Metric units)
+    $apiUrl = "http://api.openweathermap.org/data/3.0/weather?q=Kuressaare&units=metric&appid={$apiKey}";
 
-            // Get the response body as an array
-            $data = json_decode($response->getBody(), true);
+    try {
+      // Make a GET request to the OpenWeather API
+      $response = $client->get($apiUrl);
 
-            // Handle the retrieved weather data as needed (pass it to a view)
-            return view('weather', ['weatherData' => $data]);
-        } catch (\Exception $e) {
-            // Handle any errors that occur during the API request
-            return view('api_error', ['error' => $e->getMessage()]);
-        }
+      // Get the response body as an array
+      $data = json_decode($response->getBody(), true);
+
+      // Handle the retrieved weather data as needed (e.g., pass it to a view)
+      return view('weather', ['weatherData' => $data]);
+    } catch (\Exception $e) {
+      // Handle any errors that occur during the API request
+      return view('api_error', ['error' => $e->getMessage()]);
     }
+  }
 }

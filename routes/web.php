@@ -8,8 +8,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/weather', [WeatherController::class, 'getWeather']);
-
+Route::get('/weather', [WeatherController::class, 'getWeather'])->name('weather');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
