@@ -25,7 +25,7 @@ class WeatherController extends Controller
             // Get the response body as an array
             $data = json_decode($response->getBody(), true);
 
-            // Handle the retrieved weather data as needed (e.g., pass it to a view)
+            // Handle the retrieved weather data as needed (pass it to a view)
             return view('weather', ['weatherData' => $data]);
         } catch (\Exception $e) {
             // Handle any errors that occur during the API request
