@@ -1,5 +1,7 @@
 <?php
 
+
+use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +11,10 @@ Route::get('/', function () {
 });
 
 Route::get('/weather', [WeatherController::class, 'getWeather'])->name('weather');
+
+Route::resource('/chirps', ChirpController::class)
+    ->only(['index', 'store', 'edit', 'update', 'destroy'])
+    ->middleware(['auth', 'verified']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
