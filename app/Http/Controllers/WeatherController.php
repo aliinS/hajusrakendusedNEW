@@ -16,7 +16,7 @@ class WeatherController extends Controller
     $client = new Client();
 
     // API endpoint URL with your desired location and units (e.g., London, Metric units)
-    $apiUrl = "http://api.openweathermap.org/data/3.0/weather?q=Kuressaare&units=metric&appid={$apiKey}";
+    $apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=Kuressaare&units=metric&appid={$apiKey}";
 
     try {
       // Make a GET request to the OpenWeather API
@@ -26,7 +26,7 @@ class WeatherController extends Controller
       $data = json_decode($response->getBody(), true);
 
       // Handle the retrieved weather data as needed (e.g., pass it to a view)
-      return view('weather', ['weatherData' => $data]);
+      return view('weather.weather', ['weatherData' => $data]);
     } catch (\Exception $e) {
       // Handle any errors that occur during the API request
       return view('api_error', ['error' => $e->getMessage()]);
