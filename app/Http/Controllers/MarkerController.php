@@ -12,7 +12,7 @@ class MarkerController extends Controller
      */
     public function index()
     {
-        $markers = MarkerController::all();
+        $markers = Marker::all();
 
         return view('markers.index', compact('markers'));
     }
@@ -40,7 +40,8 @@ class MarkerController extends Controller
         Marker::create($validatedData);
 
         return redirect()->route('markers.index')
-            ->with('success', 'Marker deleted successfully');
+            ->with('success', 'Marker updated successfully');
+
     }
 
     /**
@@ -70,7 +71,7 @@ class MarkerController extends Controller
         ]);
 
         $marker = Marker::find($id);
-        if (!$marker) {
+        if (! $marker) {
             return redirect()->back()->withErrors('Marker not found.');
         }
 
