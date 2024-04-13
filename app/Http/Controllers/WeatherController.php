@@ -31,5 +31,5 @@ class WeatherController extends Controller
       // Handle any errors that occur during the API request
       return view('api_error', ['error' => $e->getMessage()]);
     }
-  }
+  } 
 }
