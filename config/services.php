@@ -31,4 +31,12 @@ return [
         ],
     ],
 
+    'weather' => [
+        'key' => env('WEATHER_API_KEY'),
+    ],
+
+    'map' => [
+        'key' => env('RADAR_MAP_KEY'),
+    ]
+
 ];
