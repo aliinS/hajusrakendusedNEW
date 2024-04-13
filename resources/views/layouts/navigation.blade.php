@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('chirps.index')" :active="request()->routeIs('chirps.index')">
                         {{ __('Blog') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('markers.index')" :active="request()->routeIs('markers.index')">
+                        {{ __('Map') }}                
+                    </x-nav-link>
                 </div>
             </div>
 
