@@ -59,24 +59,30 @@
                         <p class="mt-4 text-lg text-gray-900">{{ $chirp->message }}</p>
                     </div>
 
-                        @if ($chirp->comments)
-                        <div class="comments mt-4">
-                            @foreach ($chirp->comments as $comment)
-                                <div class="comment">
-                                    <span class="text-gray-600">{{ $comment->user->name }}:</span> {{ $comment->message }}
-                                    
-                                </div>
-                            @endforeach
+                    @if ($chirp->comments)
+                    <div class="comments mt-4">
+                        @foreach ($chirp->comments as $comment)
+                            <div class="comment">
+                                <span class="text-gray-600">{{ $comment->user->name }}:</span> {{ $comment->comment }}
                             </div>
-                            @endif
-                            <form method="POST" action="{{ route('comments.store') }}" class="mt-4">
+                             <form method="POST" action="{{ route('comments.destroy', $comment) }}">
                                 @csrf
-                                <input type="hidden" name="chirp_id" value="{{ $chirp->id }}">
-                                <div class="form-group">
-                                    <textarea name="message" rows="3" cols="30" class="w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Add a comment..." required></textarea>
-                                </div>
-                                <x-primary-button class="mt-4">{{ __('Comment') }}</x-primary-button>
+                                @method('delete')
+                                <button :href="route('comments.destroy', $chirp)" onclick="event.preventDefault(); this.closest('form').submit();">
+                                    {{ __('Delete') }}
+                                </button>
                             </form>
+                        @endforeach
+                    </div>
+                    @endif
+                    <form method="POST" action="{{ route('comments.store') }}" class="mt-4">
+                        @csrf
+                        <input type="hidden" name="chirp_id" value="{{ $chirp->id }}">
+                        <div class="form-group">
+                            <textarea name="comment" rows="3" cols="30" class="w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Add a comment..." required></textarea>
+                        </div>
+                        <x-primary-button>{{ __('Add Comment') }}</x-primary-button>
+                    </form>
                             
                 </div>
             @endforeach

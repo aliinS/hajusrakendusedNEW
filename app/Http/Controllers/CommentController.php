@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Chirp;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -29,26 +31,22 @@ class CommentController extends Controller
     {
         // Validation
         $request->validate([
-            'message' => 'required',
+            'comment' => 'required',
         ]);
-
-        // Create comment
+        
         Comment::create([
             'user_id' => auth()->id(),
             'chirp_id' => $request->chirp_id,
-            'message' => $request->message,
+            'comment' => $request->comment,
         ]);
-
-
-
         return back()->with('success', 'Comment added successfully!');
     }
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment)
+    public function show(Chirp $chirp_id)
     {
-        //
+
     }
     /**
      * Show the form for editing the specified resource.
