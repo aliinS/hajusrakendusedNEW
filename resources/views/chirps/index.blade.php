@@ -62,13 +62,13 @@
                     @if ($chirp->comments)
                     <div class="comments mt-4">
                         @foreach ($chirp->comments as $comment)
-                            <div class="comment">
-                                <span class="text-gray-600">{{ $comment->user->name }}:</span> {{ $comment->comment }}
+                            <div class="comment flex flex-col gap-2  bg-slate-100 p-2 rounded-md">
+                                <span class="text-gray-400">{{ $comment->user->name }} commented on {{ $comment->created_at->format('j M Y, g:i a') }}:</span> {{ $comment->comment }}
                             </div>
                              <form method="POST" action="{{ route('comments.destroy', $comment) }}">
                                 @csrf
                                 @method('delete')
-                                <button :href="route('comments.destroy', $chirp)" onclick="event.preventDefault(); this.closest('form').submit();">
+                                <button class="text-red-500 m-2 " :href="route('comments.destroy', $chirp)" onclick="event.preventDefault(); this.closest('form').submit();">
                                     {{ __('Delete') }}
                                 </button>
                             </form>
