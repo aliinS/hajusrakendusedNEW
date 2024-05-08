@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Blog;
-use App\Models\Chirp;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+
 
 class CommentController extends Controller
 {
@@ -14,48 +13,64 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::with('chirp')->latest()->paginate(10);
-
-        return view('chirps.index', compact('comments'));
+        //
     }
-
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+        // Validation
         $request->validate([
-            'chirp_id' => 'required|exists:chirps,id',
-            'content' => 'required|string',
+            'message' => 'required',
         ]);
 
+        // Create comment
         Comment::create([
-            'chirp_id' => $request->chirp_id,
             'user_id' => auth()->id(),
-            'content' => $request->content,
+            'chirp_id' => $request->chirp_id,
+            'message' => $request->message,
         ]);
 
-        return back()->with('success', 'Comment added successfully.');
-    }
 
+
+        return back()->with('success', 'Comment added successfully!');
+    }
     /**
      * Display the specified resource.
      */
-    public function show(Chirp $chirp)
+    public function show(Comment $comment)
     {
-        // Loading comments for a specific blog post
-        $comments = $chirp->comments()->with('user')->get();
-
-        return view('chirps.index');
+        //
     }
-
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Comment $comment)
+    {
+        //
+    }
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Comment $comment)
+    {
+        //
+    }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Comment $comment)
     {
-
+        Gate::authorize('delete', $comment);
         $comment->delete();
-
+        return back()->with('success', 'Comment deleted successfully!');
     }
 }

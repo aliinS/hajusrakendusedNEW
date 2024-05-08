@@ -4,20 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model
 {
-    use HasFactory;
-    protected $fillable = [
-        'message',
-        'chirp_id',
-    ];
-    public function user(): BelongsTo
+    protected $fillable = ['user_id', 'chirp_id', 'message'];
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
-    public function chirp(): BelongsTo
+    public function chirp()
     {
         return $this->belongsTo(Chirp::class);
     }

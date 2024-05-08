@@ -6,14 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    
+
     public function up(): void
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('chirp_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('message');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('chirp_id');
+            $table->text('message');
             $table->timestamps();
         });
     }
