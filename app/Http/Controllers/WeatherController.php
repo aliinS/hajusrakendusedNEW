@@ -2,34 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class WeatherController extends Controller
 {
-  public function getWeather()
-  {
-    // Replace 'YOUR_API_KEY' with your OpenWeather API key
-    $apiKey = config('services.weather.key');
+    public function getWeather()
+    {
+        $apiKey = config('services.weather.key');
 
-    // Create a new Guzzle client instance
-    $client = new Client();
+        $apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=Kuressaare&units=metric&appid={$apiKey}";
 
-    // API endpoint URL with your desired location and units (e.g., London, Metric units)
-    $apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=Kuressaare&units=metric&appid={$apiKey}";
+        $cacheKey = 'weather_data_kuressaare';
 
-    try {
-      // Make a GET request to the OpenWeather API
-      $response = $client->get($apiUrl);
+        if (Cache::has($cacheKey)) {
+            $weatherData = Cache::get($cacheKey);
+        } else {
+            $response = Http::get($apiUrl);
 
-      // Get the response body as an array
-      $data = json_decode($response->getBody(), true);
+            if ($response->successful()) {
+                $weatherData = $response->json();
+                Cache::put($cacheKey, $weatherData, now()->addHour());
+            } else {
+                Log::error('Failed to fetch weather data from the API. Response: '.$response->body());
+                $errorDetails = [
+                    'message' => 'Failed to fetch weather data.',
+                    'details' => $response->json() ?? 'No additional information available.',
+                ];
 
-      // Handle the retrieved weather data as needed (e.g., pass it to a view)
-      return view('weather.weather', ['weatherData' => $data]);
-    } catch (\Exception $e) {
-      // Handle any errors that occur during the API request
-      return view('api_error', ['error' => $e->getMessage()]);
+                return view('error', compact('errorDetails'));
+            }
+        }
+
+        return view('weather.weather', compact('weatherData'));
     }
-  } 
 }
