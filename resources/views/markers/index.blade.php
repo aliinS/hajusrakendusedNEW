@@ -55,10 +55,8 @@
           </div>
       </div>
   </div>
-
-  <!-- Google Maps API -->
   <script>
-    // Prepare marker data
+
     const markersData = @json($markers);
 
     function initMap() {
@@ -68,11 +66,11 @@
             mapId: "RADAR_MAP_KEY"
         };
         
-        // Initialize map
+
         const map = new google.maps.Map(document.getElementById('map'), mapOptions); // The new google.maps.marker.AdvancedMarkerElement won´t work
         const bounds = new google.maps.LatLngBounds();
 
-        // Place markers
+
         markersData.forEach((data) => {
             const mapMarker = new google.maps.Marker({
                 position: new google.maps.LatLng(data.latitude, data.longitude),
@@ -80,28 +78,26 @@
                 title: data.name
             });
 
-            // Extend the bounds to include this marker's position
             bounds.extend(mapMarker.getPosition());
 
-            // Add click event listener to markers
+
             mapMarker.addListener('click', function() {
                 // Create an InfoWindow instance
                 const infoWindow = new google.maps.InfoWindow({
                     content: `<strong>${data.name}</strong><br>${data.description}`
                 });
-                // Open the InfoWindow on the marker
+
                 infoWindow.open(map, mapMarker);
             });
         });
 
-        // Only fit the bounds if there are markers
         if (markersData.length > 0) {
             map.fitBounds(bounds);
         } else {
             map.setCenter(mapOptions.center);
         }
 
-        // Add map click event listener
+
         google.maps.event.addListener(map, 'click', function(event) {
             const markerName = prompt("Enter map marker name:", "");
             if (markerName) {
