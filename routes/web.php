@@ -33,11 +33,11 @@ Route::get('/dashboard', function () {
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');;
 
-Route::get('/products', function (ProductController $product) {
-    return view('products.index');
-})->name('products.index');
 
-
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+Route::get('/markers/{id}/update', [ProductController::class, 'update'])->name('products.update');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

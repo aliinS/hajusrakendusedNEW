@@ -21,30 +21,27 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'file' => 'required'
         ]);
 
-        $product = Product::create($request->all());
-
-        $product->addMediaFromRequest('file')->toMediaCollection('images');
+        $product = Product::create($validated);
 
         return redirect()->route('products.index');
     }
 
 
-    public function show($id)
+    public function show()
     {
-        $product = Product::findOrFail($id);
+        $product = Product::all();
         return view('products.show', ['product' => $product]);
     }
 
-    public function edit($id)
+    public function edit(Product $product)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::all();
         return view('products.edit', ['product' => $product]);
     }
 
