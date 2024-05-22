@@ -7,7 +7,7 @@
     <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
         <form method="POST" action="{{ route('products.update', $product) }}">
             @csrf
-            @method('patch')
+            @method('post')
             <x-text-input name="name" value="{{ old('name', $product->name) }}" ></x-text-input>
             <x-text-input name="description" value="{{ old('description', $product->description) }}" ></x-text-input>
             <x-input-error :messages="$errors->get('message')" class="mt-2" />

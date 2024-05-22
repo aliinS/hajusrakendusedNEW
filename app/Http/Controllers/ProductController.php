@@ -41,25 +41,29 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        $product = Product::all();
-        return view('products.edit', ['product' => $product]);
+        
+        return view('products.edit', [
+            'product' => $product,
+        ]);
+        
     }
 
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'string|max:255',
-            'description' => 'string',
-            'price' => 'numeric|min:0',
-            'file' => '',
-        ]);
+{
+    $validated = $request->validate([
+        'name' => 'string|max:255',
+        'description' => 'string',
+        'price' => 'numeric|min:0',
+        'file' => '',
+    ]);
 
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
+    $product = Product::findOrFail($id);
+    
+    $product->update($validated);
 
-        return redirect()->route('products.index');
-    }
+    return redirect()->route('products.index');
+}
 
 
     public function destroy($id)
