@@ -44,8 +44,4 @@ task('deploy',[
 
 // Hosts
 
-
-
-// Hooks
-
 after('deploy:failed', 'deploy:unlock');

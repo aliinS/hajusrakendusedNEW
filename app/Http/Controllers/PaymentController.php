@@ -2,33 +2,52 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
-use Stripe\Stripe;
-use Stripe\Charge;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Session;
 
 class PaymentController extends Controller
 {
-    public function process(Request $request)
+    public function index()
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
+        return view('checkout.checkout');
+    }
 
-        try {
-            $charge = Charge::create([
-                'amount' => 1000, 
-                'currency' => 'eur',
-                'source' => $request->stripeToken, 
-                'description' => 'Payment Description',
-            ]);
+    public function checkout(Request $request)
+    {
+        \Stripe\Stripe::setApiKey(Config::get('services.stripe.secret'));
 
-            if ($charge->paid) {
-                session()->forget('cart');
-                return redirect()->route('confirmation')->with('success', 'Payment processed successfully!');
-            } else {
-                return back()->withErrors('Payment failed, please try again.');
-            }
-            
-        } catch (\Exception $e) {
-            return back()->withErrors('Error: ' . $e->getMessage());
+        $cart = Session::get('cart', []);
+        $lineItems = [];
+        foreach ($cart as $cartItem) {
+            $lineItems[] = [
+                'price_data' => [
+                    'currency' => 'EUR',
+                    'unit_amount' => $cartItem['price'] * 100,
+                    'product_data' => [
+                        'name' => $cartItem['name']
+                    ]
+                ],
+                'quantity' => $cartItem['quantity'],
+            ];
         }
+        $checkout_session = \Stripe\Checkout\Session::create([
+            'line_items' => $lineItems,
+            'mode' => 'payment',
+            'success_url' => route('checkout.success'),
+            'cancel_url' => route('checkout.cancel'),
+        ]);
+        return Redirect::to($checkout_session->url);
+    }
+    public function success(Request $request)
+    {
+        Session::forget('cart');
+        return view('success');
+    }
+
+    public function cancel(Request $request)
+    {
+        return view('cancel');
     }
 }

@@ -49,14 +49,15 @@
             <div class="flex justify-end mt-8">
                 <div class="w-full lg:w-2/3 text-right">
                     <h3 class="text-2xl font-semibold mb-4">Total: €{{ $totalAmount }}</h3>
-                    <a href="{{ route('payment') }}" class="px-6 py-2 bg-gray-700 text-white rounded-lg">Proceed to Payment</a>
+                    <form action="{{ route('checkout.checkout') }}" method="POST">
+                        @csrf
+                        @method('POST')
+                        <button type="submit" class="px-4 py-1 text-red-600 rounded-lg">Proceed to Payment</button>
+                    </form>
                 </div>
             </div>
         @else
-            <div class="flex justify-end">
-                <p class="text-lg">Your cart is empty!</p>
-                <a href="{{ route('products.index') }}" class="mt-4 px-6 py-2 bg-gray-500 text-white rounded-lg">Continue Shopping</a>
-            </div>
+           
         @endif
     </div>
     @push('scripts')

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\CommentController;
@@ -8,6 +9,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WeatherController;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -60,10 +63,24 @@ Route::get('/confirmation', function () {
     return view('products.confirmation');
 })->name('confirmation');
 
+Route::middleware(['auth', 'verified'])->prefix('checkout')->name('checkout.')->group(function () {
+    Route::get('/', [PaymentController::class, 'index'])->name('index');
+    Route::post('/sessions', [PaymentController::class, 'checkout'])->name('checkout');
+    Route::get('/success', [PaymentController::class, 'success'])->name('success');
+    Route::get('/cancel', [PaymentController::class, 'cancel'])->name('cancel');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/api', [ApiController::class, 'index'])->name('api.index');
+    Route::get('/api/records', [ApiController::class, 'records'])->name('api.records');
+    Route::get('/api/movies', [ApiController::class, 'movies'])->name('api.movies');
+    Route::get('/api/makeup', [ApiController::class, 'makeup'])->name('api.makeup');
 });
 
 require __DIR__.'/auth.php';

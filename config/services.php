@@ -37,6 +37,14 @@ return [
 
     'map' => [
         'key' => env('RADAR_MAP_KEY'),
-    ]
+    ],
+
+    'stripe' => [
+        'key' => env('STRIPE_PUBLIC_KEY'),
+        'secret' => env('STRIPE_SECRET_KEY'),
+        'options' => [
+            'CURLOPT_HTTPHEADER' => ['Access-Control-Allow-Origin: *'],
+        ],
+    ],
 
 ];
