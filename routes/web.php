@@ -1,9 +1,10 @@
 <?php
 
-
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MarkerController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WeatherController;
@@ -40,6 +41,24 @@ Route::post('/products', [ProductController::class, 'store'])->name('products.st
 Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
 Route::post('/products/{id}', [ProductController::class, 'update'])->name('products.update');
 Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+
+Route::delete('/cart/remove/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+
+Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');
+
+Route::get('/payment', function () {
+    return view('products.payment');
+})->name('payment');
+
+Route::get('/confirmation', function () {
+    return view('products.confirmation');
+})->name('confirmation');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
